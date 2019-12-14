@@ -7,5 +7,5 @@ public interface ILinearList
 	int indexOf(Object object);
 	void add(int index, Object object);
 	Object remove(int index);
-	String outputlist();
+	String outputList();
 }
