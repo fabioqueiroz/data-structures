@@ -11,6 +11,15 @@ public class ArrayLinearList implements ILinearList
 		}
 
 		this.elementArray = new Object[initialCapacity];
+		this.size = 1; // review
+	}
+	
+	public void checkIndex(int index)
+	{
+		if (index < 0 || index >= size) 
+		{
+			throw new IndexOutOfBoundsException("index="+ index +", size=" + size);
+		}
 	}
 		
 	@Override
@@ -22,7 +31,7 @@ public class ArrayLinearList implements ILinearList
 	@Override
 	public int size() 
 	{
-		return size;
+		return size - 1; // review
 	}
 
 	@Override
@@ -53,12 +62,12 @@ public class ArrayLinearList implements ILinearList
 		
 		if (size == elementArray.length)
 		{
-			Object[]newArray= new Object[elementArray.length*2];
+			Object[] newArray = new Object[elementArray.length*2];
 			System.arraycopy(elementArray,0,newArray,0,elementArray.length);     
 			elementArray = newArray;
 		}
 		
-		for (int i = size -1; i >= index; i--) 
+		for (int i = size - 1; i >= index; i--) 
 		{
 			elementArray[i + 1] = elementArray[i];
 			elementArray[index] = object;
@@ -73,7 +82,7 @@ public class ArrayLinearList implements ILinearList
 		
 		Object removedElement = elementArray[index];
 		
-		for (int i = index+ 1; i < size; i++) 
+		for (int i = index + 1; i < size; i++) 
 		{
 			elementArray[i-1] = elementArray[i];
 		}
@@ -96,26 +105,17 @@ public class ArrayLinearList implements ILinearList
 			}
 			else
 			{
-				s.append(elementArray[i].toString()+",");
+				s.append(elementArray[i].toString() + ",");
 			}
 		}
 		
 		if (size > 0)        
 		{
-			s.delete(s.length() -2, s.length()); 			
+			s.delete(s.length() - 2, s.length()); 			
 		}
 		
 		s.append("]");
 		
 		return new String(s);		
 	}
-	
-	public void checkIndex(int index)
-	{
-		if (index < 0 || index >= size) 
-		{
-			throw new IndexOutOfBoundsException("index="+ index +", size=" + size);
-		}
-	}
-
 }
