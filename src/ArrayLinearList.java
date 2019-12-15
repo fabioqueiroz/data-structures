@@ -101,7 +101,8 @@ public class ArrayLinearList implements ILinearList
 		{
 			if (elementArray[i] == null) 
 			{
-				s.append("null, ");
+//				s.append("null, ");
+				s.append(" ");
 			}
 			else
 			{

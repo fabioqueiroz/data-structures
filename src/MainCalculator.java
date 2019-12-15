@@ -7,13 +7,13 @@ public class MainCalculator {
 		
 		ArrayLinearList numbers = new ArrayLinearList(5);
 		
-		numbers.add(0, 1);
-		numbers.add(1, 2);
+//		numbers.add(0, 1);
+//		numbers.add(1, 2);
 		
-//		for (int i = 0; i < numbers.size; i++) 
-//		{
-//			numbers.add(i, i + 1);			
-//		}
+		for (int i = 0; i < 5; i++) 
+		{
+			numbers.add(i, i + 1);			
+		}
 		
 		System.out.println(numbers.size());
 		System.out.println(numbers.outputList());
