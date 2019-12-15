@@ -39,7 +39,7 @@ public class MainCalculator {
 
 		stack.pop();
 		
-		System.out.println(stack.peek());
+		System.out.println(stack.peek()); 
 
 	}
 }
