@@ -44,7 +44,7 @@ public class MainCalculator {
 //		System.out.println("");
 		
 		// Postfix
-		System.out.println("Postfix tests:");
+//		System.out.println("Postfix tests:");
 		
 		PostfixCalculator pc = new PostfixCalculator();
 		
