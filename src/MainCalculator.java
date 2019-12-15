@@ -3,10 +3,10 @@ public class MainCalculator {
 
 	public static void main(String[] args) 
 	{
-		System.out.println("ArrayList tests:");
-		
+		// Array
+		System.out.println("ArrayList tests:");		
 		ArrayLinearList numbers = new ArrayLinearList(5);
-				
+		
 		for (int i = 0; i < 5; i++) 
 		{
 			numbers.add(i, i + 1);			
@@ -25,15 +25,19 @@ public class MainCalculator {
 		
 		System.out.println("");
 		
+		// ArrayStack
 		System.out.println("Array Stack tests:");
-		
-		
+				
 		ArrayStack stack = new ArrayStack(5);
 				
 		for (int i = 0; i < 6; i++) 
 		{
 			stack.push(i);			
 		}
+		
+		System.out.println(stack.peek());
+
+		stack.pop();
 		
 		System.out.println(stack.peek());
 
