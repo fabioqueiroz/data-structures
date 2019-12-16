@@ -173,7 +173,7 @@ public class PostfixCalculator
 	private String convertToPostfix(String input) 
     {
 		 input = input.replaceAll("\\s+","");
-		 StringBuilder postfix = new StringBuilder(input.length());
+		 StringBuilder result = new StringBuilder(input.length());
 	     char c;
 
          for (int i = 0; i < input.length(); i++) 
@@ -182,7 +182,7 @@ public class PostfixCalculator
 
 	            if (!isOperator(c)) 
 	            {
-	                postfix.append(c);
+	                result.append(c);
 	            } 
 	            else if (c == '(') 
 	            {
@@ -195,18 +195,24 @@ public class PostfixCalculator
 
 	                while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
 	                {
-	                    postfix.append(operatorStack.pop());
+	                    result.append(operatorStack.pop());
 	                }
 	                if (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
-	                    return null;
+	                {
+	                	return null;
+	                }
+	                    
 	                else if(!operatorStack.isEmpty())
+	                {
 	                	operatorStack.pop();
+	                }
+	                	
 	            }
 	            
 	            else if (isOperator(c)) // operator encountered
 	            {
 	                if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) {
-	                    postfix.append(operatorStack.pop());
+	                    result.append(operatorStack.pop());
 	                }
 	                operatorStack.push(c);
 	            }
@@ -214,11 +220,12 @@ public class PostfixCalculator
 
 	        while (!operatorStack.isEmpty()) 
 	        {
-	            postfix.append(operatorStack.pop());
+	            result.append(operatorStack.pop());
 	        }
 	        
-	        System.out.println(postfix.toString());
-	        return postfix.toString();
+	        System.out.println("___________________");
+	        System.out.println("result = " + result.toString());
+	        return result.toString();
 	    }
 	    	  		    
 }
