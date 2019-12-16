@@ -20,7 +20,7 @@ public class PostfixCalculator
     	
     	postfixConverter(input);
     	
-    	convertToPostfix(input);
+    	postfixConverter2(input);
 
     	scanner.close();
     	
@@ -31,30 +31,6 @@ public class PostfixCalculator
         return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '(' || c == ')';
     }
     
-
-	private static boolean isLowerPrecedence(char op1, char op2)
-	{
-	    switch (op1)
-	    {
-	        case '+':
-	        case '-':
-	            return !(op2 == '+' || op2 == '-');
-	
-	        case '*':
-	        case '/':
-	            return op2 == '^' || op2 == '(';
-	
-	        case '^':
-	            return op2 == '(';
-	
-	        case '(':
-	            return true;
-	
-	        default:
-	            return false;
-	    }
-	}
-	 
 	 
 	// only using the operator stack
 	 private void postfixConverter(String input)
@@ -169,7 +145,7 @@ public class PostfixCalculator
         return -1;
     }	 
 	 
-	 // WORKING MODEL
+	 // MODEL
 	private String convertToPostfix(String input) 
     {
 		 input = input.replaceAll("\\s+","");
@@ -227,5 +203,70 @@ public class PostfixCalculator
 	        System.out.println("result = " + result.toString());
 	        return result.toString();
 	    }
+	
+	 // NEW MODEL
+	private void postfixConverter2(String input) 
+	{
+		input = input.replaceAll("\\s+","");
+		StringBuilder result = new StringBuilder(input.length());
+   	    @SuppressWarnings("resource")
+	    Scanner eqScanner = new Scanner(input); // (x*y)+p/k
+	     
+		while(eqScanner.hasNextLine())
+		{
+		 	 String equation = eqScanner.nextLine().trim();
+		    	 
+		   	 for (char c : equation.toCharArray()) 
+		     {
+
+		         if (!isOperator(c)) 
+		         {
+		             result.append(c);
+		         } 
+		         else if (c == '(') 
+		         {
+		           	operatorStack.push(c);
+		         }
+		         // If the scanned character is an ‘)’, pop and output from the stack
+		         // until an ‘(‘ is encountered.
+		         else if (c == ')') 
+		         {
+
+		             while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
+		             {
+		                 result.append(operatorStack.pop());
+		             }
+		             if (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
+		             {
+		              	System.out.println("null");
+		             }
+			                    
+		             else if(!operatorStack.isEmpty())
+		             {
+		               	operatorStack.pop();
+		             }
+			                	
+		          }
+			            
+		          else if (isOperator(c)) // operator encountered
+		          {
+		               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
+		               {
+		                   result.append(operatorStack.pop());
+			           }
+			                operatorStack.push(c);
+			            }
+			      }
+
+			      while (!operatorStack.isEmpty()) 
+			      {
+			          result.append(operatorStack.pop());
+			      }
+			        
+			      System.out.println("___________________");
+			      System.out.println("result 2 = " + result.toString());
+		     	}
+		     
+		}
 	    	  		    
 }
