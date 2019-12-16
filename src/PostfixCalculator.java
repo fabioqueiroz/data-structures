@@ -19,6 +19,8 @@ public class PostfixCalculator
     	String input = scanner.nextLine();
     	
     	postfixConverter(input);
+    	
+    	convertToPostfix(input);
 
     	scanner.close();
     	
@@ -115,15 +117,16 @@ public class PostfixCalculator
 									result.append((char)operatorStack.pop());
 								}
 								
-								operatorStack.push(c);
+								//operatorStack.push(c);
 
 								// Push the operator into the stack except '('
 								if(c != '(')
 								{
-									System.out.println("precedence char: " + c);
-									System.out.println("precedence peek: " + (char)operatorStack.peek());
-									//operatorStack.push(c);
+									
+									operatorStack.push(c);
 									//System.out.println("operator in the stack: " + operatorStack.peek());
+//									System.out.println("precedence char: " + precedence(c));
+//									System.out.println("precedence peek: " + precedence((char)operatorStack.peek()));
 								}
 								
 //								while(!operatorStack.isEmpty()) 
@@ -166,14 +169,16 @@ public class PostfixCalculator
         return -1;
     }	 
 	 
-	 private String convertToPostfix(String infix) 
+	 // WORKING MODEL
+	private String convertToPostfix(String input) 
     {
-		 StringBuffer postfix = new StringBuffer(infix.length());
+		 input = input.replaceAll("\\s+","");
+		 StringBuilder postfix = new StringBuilder(input.length());
 	     char c;
 
-         for (int i = 0; i < infix.length(); i++) 
-        {
-	            c = infix.charAt(i);
+         for (int i = 0; i < input.length(); i++) 
+         {
+	            c = input.charAt(i);
 
 	            if (!isOperator(c)) 
 	            {
@@ -211,6 +216,8 @@ public class PostfixCalculator
 	        {
 	            postfix.append(operatorStack.pop());
 	        }
+	        
+	        System.out.println(postfix.toString());
 	        return postfix.toString();
 	    }
 	    	  		    
