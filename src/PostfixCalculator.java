@@ -19,14 +19,14 @@ public class PostfixCalculator
     	String input = scanner.nextLine();
     	
     	postfixConverter(input);
-    	
+
     	scanner.close();
     	
     }
     
     private boolean isOperator(char c)
     {
-        return c == '+' || c == '-' || c == '*' || c == '/'|| c == '^' || c == '(' || c == ')';
+        return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '(' || c == ')';
     }
     
 
@@ -53,78 +53,6 @@ public class PostfixCalculator
 	    }
 	}
 	 
-
-//	 private void postfixConverter(String input)
-//	    {
-//	    	input = input.replaceAll("\\s+","");
-//	    	
-//	    	if (input.length() > 20) 
-//	    	{
-//	    		System.out.println("Max 20 characters");
-//			} 
-//	    	
-//	    	else 
-//	    	{
-//	    		StringBuilder result = new StringBuilder(input.length()); 
-//	    	
-//	    		@SuppressWarnings("resource")
-//	    		Scanner eqScanner = new Scanner(input); // (x*y)+p/k
-//	        	
-//	        	while(eqScanner.hasNextLine())
-//	        	{       		
-//	        		Object valueTop;
-//					Object operator;
-//					Object valueBottom;
-//					String equation = eqScanner.nextLine().trim();
-//	        		
-//	        		for (Character c : equation.toCharArray()) 
-//	        		{
-//						// Consider only what's inside the brackets
-//						if(c != '(' && c != ')')
-//						{										
-//							// Push the operators into their stack
-//							if (c == '*' | c == '/' | c == '+') 
-//							{
-//								operatorStack.push(c);
-//							} 
-//							
-//							// Push the operands into their stack
-//							else 
-//							{
-//								operandStack.push(c);
-//							}																
-//						}
-//						
-//						// If a right bracket it found pop the last two values in the stack
-//						if(c == ')')
-//						{
-//							valueTop = operandStack.pop();
-//							operator = operatorStack.pop();
-//							valueBottom = operandStack.pop();
-//
-//							// Add the operator to an array
-//							result.append(valueBottom.toString());
-//							result.append(valueTop.toString());
-//							result.append(operator.toString());
-//
-//						}
-//						
-//						else
-//						{
-//							System.out.println("else statement");
-//						}
-//	        			
-//					} 			        		    		
-//	        		
-//	        		System.out.println("output = " + result);
-//	        		System.out.println("top operand: " + operandStack.peek());
-//	        		System.out.println("top operator: " + operatorStack.peek());
-//	        	}   
-//	        	    	
-//	        	eqScanner.close();
-//			}
-//	    	  	
-//	    }
 	 
 	// only using the operator stack
 	 private void postfixConverter(String input)
@@ -158,44 +86,61 @@ public class PostfixCalculator
 	        			
 						else
 						{
+							// Push the operators into the stack
+//							operatorStack.push(c); // trial
+//							System.out.println("1) operator in the stack: " + operatorStack.peek());
+							
 							// Pop the operators from the stack when a ')' is found
 							if (c == ')')
 							{								
-								while (!operatorStack.isEmpty() && (char) operatorStack.peek() != '(')
-			                    {
+								while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
+			                    {																
 									result.append((char)operatorStack.pop());
 			                    }
 								
 								if (!operatorStack.isEmpty())
 				                {
 									operatorStack.pop();
+									
 				                }
+										
+
 							}
 
 							else
 							{
-								// Push the operator into the stack
-								if(c!= '(')
+								if(!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek()))
 								{
-									operatorStack.push(c);
-									System.out.println("operator in the stack: " + operatorStack.peek());
-								}
-								
-								while(!operatorStack.isEmpty()) 
-								{
+									
 									result.append((char)operatorStack.pop());
 								}
 								
+								operatorStack.push(c);
+
+								// Push the operator into the stack except '('
+								if(c != '(')
+								{
+									System.out.println("precedence char: " + c);
+									System.out.println("precedence peek: " + (char)operatorStack.peek());
+									//operatorStack.push(c);
+									//System.out.println("operator in the stack: " + operatorStack.peek());
+								}
+								
+//								while(!operatorStack.isEmpty()) 
+//								{								
+//									result.append((char)operatorStack.pop());
+//								}
 							}
-							
+							while(!operatorStack.isEmpty()) 
+							{								
+								result.append((char)operatorStack.pop());
+							}
 						}
 	        			
 					} 	
 	        		
 	        		System.out.println("___________________");
 	        		System.out.println("output = " + result);
-//	        		System.out.println("top operator: " + operatorStack.peek());
-
 	        	}   
 	        	    	
 	        	eqScanner.close();
@@ -203,8 +148,10 @@ public class PostfixCalculator
 	    	  	
 	    }
 	 
-	 private int precedence(Object object){
-        switch ((char)object){
+	 private int precedence(char c)
+	 {
+        switch (c)
+        {
             case '+':
             case '-':
                 return 1;
@@ -213,7 +160,58 @@ public class PostfixCalculator
                 return 2;
             case '^':
                 return 3;
+            case ')':
+                return 4;
         }
         return -1;
     }	 
+	 
+	 private String convertToPostfix(String infix) 
+    {
+		 StringBuffer postfix = new StringBuffer(infix.length());
+	     char c;
+
+         for (int i = 0; i < infix.length(); i++) 
+        {
+	            c = infix.charAt(i);
+
+	            if (!isOperator(c)) 
+	            {
+	                postfix.append(c);
+	            } 
+	            else if (c == '(') 
+	            {
+	            	operatorStack.push(c);
+	            }
+	            // If the scanned character is an ‘)’, pop and output from the stack
+	            // until an ‘(‘ is encountered.
+	            else if (c == ')') 
+	            {
+
+	                while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
+	                {
+	                    postfix.append(operatorStack.pop());
+	                }
+	                if (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
+	                    return null;
+	                else if(!operatorStack.isEmpty())
+	                	operatorStack.pop();
+	            }
+	            
+	            else if (isOperator(c)) // operator encountered
+	            {
+	                if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) {
+	                    postfix.append(operatorStack.pop());
+	                }
+	                operatorStack.push(c);
+	            }
+	        }
+
+	        while (!operatorStack.isEmpty()) 
+	        {
+	            postfix.append(operatorStack.pop());
+	        }
+	        return postfix.toString();
+	    }
+	    	  		    
 }
