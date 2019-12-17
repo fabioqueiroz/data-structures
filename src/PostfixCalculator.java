@@ -82,32 +82,21 @@ public class PostfixCalculator
 						}
 	        			
 						else if (isOperator(c)) // operator encountered
-				          {
+				        {
 				               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
 				               {
 				                   result.append(operatorStack.pop());
 					           }
 					               operatorStack.push(c);
 					           
-					      }
+					    }	        				        			
 	        			
-//						else
-//						{
-//							if(!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek()))
-//							{
-//								
-//								result.append((char)operatorStack.pop());
-//							}
-//							
-//							
-//							
-//						}
-	        				        			
-	        			while (!operatorStack.isEmpty()) 
-						{								
-							result.append((char)operatorStack.pop());
-						}
 					} 	
+	        		
+	        		while (!operatorStack.isEmpty()) 
+					{								
+						result.append((char)operatorStack.pop());
+					}
 	        		
 	        		System.out.println("___________________");
 	        		System.out.println("output = " + result);
@@ -140,6 +129,7 @@ public class PostfixCalculator
 	 // NEW MODEL
 	private void postfixConverter2(String input) 
 	{
+		// Ensure there are no spaces in the equation
 		input = input.replaceAll("\\s+","");
 		
 		if (input.length() > 20) 
@@ -189,25 +179,25 @@ public class PostfixCalculator
 			          // Process the other operators
 			          else if (isOperator(c)) 
 			          {
-			               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
+			               if (!operatorStack.isEmpty() && precedence((char)operatorStack.peek()) >= precedence(c)) 
 			               {
 			                   result.append(operatorStack.pop());
 				           }
 				               operatorStack.push(c);
-				           }
 				      }
+				   }
 
-				      while (!operatorStack.isEmpty()) 
-				      {
-				          result.append(operatorStack.pop());
-				      }
+			   	  // Remove the remaining operators from the stack
+				  while (!operatorStack.isEmpty()) 
+				  {
+				       result.append(operatorStack.pop());
+				  }
 				        
-				      System.out.println("___________________");
-				      System.out.println("postfix = " + result.toString());
-			     	}
+				  System.out.println("___________________");
+				  System.out.println("postfix = " + result.toString());
+			    }
 			
 				eqScanner.close();
 			}
-		}
-			    	  		    
+		}			    	  		    
 }
