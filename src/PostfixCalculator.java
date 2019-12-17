@@ -113,8 +113,7 @@ public class PostfixCalculator
 				       result.append(operatorStack.pop());
 				  }
 				        
-				  System.out.println("___________________");
-				  System.out.println("infix = " + input);
+				  System.out.println("______________________________");
 				  System.out.println("postfix = " + result.toString());
 			    }
 			
