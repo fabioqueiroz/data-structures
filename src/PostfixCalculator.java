@@ -3,13 +3,11 @@ import java.util.Scanner;
 public class PostfixCalculator 
 {
 	Scanner scanner;
-	ArrayStack operandStack;
 	ArrayStack operatorStack;
 	
     public PostfixCalculator() 
     {
     	scanner = new Scanner(System.in);
-    	operandStack = new ArrayStack(20);
     	operatorStack = new ArrayStack(10);  	   	
 	}
 
@@ -62,60 +60,53 @@ public class PostfixCalculator
 	        				result.append(c);
 	        			}
 	        			
-						else
-						{
-							// Push the operators into the stack
-//							operatorStack.push(c); // trial
-//							System.out.println("1) operator in the stack: " + operatorStack.peek());
-							
-							// Pop the operators from the stack when a ')' is found
-							if (c == ')')
-							{								
-								while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
-			                    {																
-									result.append((char)operatorStack.pop());
-			                    }
-								
-								if (!operatorStack.isEmpty())
-				                {
-									operatorStack.pop();
-									
-				                }
-										
-
-							}
-
-							else
-							{
-								if(!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek()))
-								{
-									
-									result.append((char)operatorStack.pop());
-								}
-								
-								//operatorStack.push(c);
-
-								// Push the operator into the stack except '('
-								if(c != '(')
-								{
-									
-									operatorStack.push(c);
-									//System.out.println("operator in the stack: " + operatorStack.peek());
-//									System.out.println("precedence char: " + precedence(c));
-//									System.out.println("precedence peek: " + precedence((char)operatorStack.peek()));
-								}
-								
-//								while(!operatorStack.isEmpty()) 
-//								{								
-//									result.append((char)operatorStack.pop());
-//								}
-							}
-							while(!operatorStack.isEmpty()) 
-							{								
+	        			else if (c == '(') 
+				        {
+							operatorStack.push(c);
+				        }
+	        			
+	        			// Pop the operators from the stack when a ')' is found
+						else if (c == ')')
+						{								
+							while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
+		                    {																
 								result.append((char)operatorStack.pop());
-							}
+		                    }
+							
+							if (!operatorStack.isEmpty())
+			                {
+								operatorStack.pop();
+								
+			                }										
+
 						}
 	        			
+						else if (isOperator(c)) // operator encountered
+				          {
+				               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
+				               {
+				                   result.append(operatorStack.pop());
+					           }
+					               operatorStack.push(c);
+					           
+					      }
+	        			
+//						else
+//						{
+//							if(!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek()))
+//							{
+//								
+//								result.append((char)operatorStack.pop());
+//							}
+//							
+//							
+//							
+//						}
+	        				        			
+	        			while (!operatorStack.isEmpty()) 
+						{								
+							result.append((char)operatorStack.pop());
+						}
 					} 	
 	        		
 	        		System.out.println("___________________");
@@ -145,128 +136,78 @@ public class PostfixCalculator
         return -1;
     }	 
 	 
-	 // MODEL
-	private String convertToPostfix(String input) 
-    {
-		 input = input.replaceAll("\\s+","");
-		 StringBuilder result = new StringBuilder(input.length());
-	     char c;
-
-         for (int i = 0; i < input.length(); i++) 
-         {
-	            c = input.charAt(i);
-
-	            if (!isOperator(c)) 
-	            {
-	                result.append(c);
-	            } 
-	            else if (c == '(') 
-	            {
-	            	operatorStack.push(c);
-	            }
-	            // If the scanned character is an ‘)’, pop and output from the stack
-	            // until an ‘(‘ is encountered.
-	            else if (c == ')') 
-	            {
-
-	                while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
-	                {
-	                    result.append(operatorStack.pop());
-	                }
-	                if (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
-	                {
-	                	return null;
-	                }
-	                    
-	                else if(!operatorStack.isEmpty())
-	                {
-	                	operatorStack.pop();
-	                }
-	                	
-	            }
-	            
-	            else if (isOperator(c)) // operator encountered
-	            {
-	                if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) {
-	                    result.append(operatorStack.pop());
-	                }
-	                operatorStack.push(c);
-	            }
-	        }
-
-	        while (!operatorStack.isEmpty()) 
-	        {
-	            result.append(operatorStack.pop());
-	        }
-	        
-	        System.out.println("___________________");
-	        System.out.println("result = " + result.toString());
-	        return result.toString();
-	    }
 	
 	 // NEW MODEL
 	private void postfixConverter2(String input) 
 	{
 		input = input.replaceAll("\\s+","");
-		StringBuilder result = new StringBuilder(input.length());
-   	    @SuppressWarnings("resource")
-	    Scanner eqScanner = new Scanner(input); // (x*y)+p/k
-	     
-		while(eqScanner.hasNextLine())
+		
+		if (input.length() > 20) 
+    	{
+    		System.out.println("Max 20 characters");
+		} 
+		
+		else 
 		{
-		 	 String equation = eqScanner.nextLine().trim();
-		    	 
-		   	 for (char c : equation.toCharArray()) 
-		     {
-
-		         if (!isOperator(c)) 
-		         {
-		             result.append(c);
-		         } 
-		         else if (c == '(') 
-		         {
-		           	operatorStack.push(c);
-		         }
-		         // If the scanned character is an ‘)’, pop and output from the stack
-		         // until an ‘(‘ is encountered.
-		         else if (c == ')') 
-		         {
-
-		             while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
-		             {
-		                 result.append(operatorStack.pop());
-		             }
-		             if (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(')
-		             {
-		              	System.out.println("null");
-		             }
-			                    
-		             else if(!operatorStack.isEmpty())
-		             {
-		               	operatorStack.pop();
-		             }
-			                	
-		          }
-			            
-		          else if (isOperator(c)) // operator encountered
-		          {
-		               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
-		               {
-		                   result.append(operatorStack.pop());
-			           }
-			                operatorStack.push(c);
-			            }
-			      }
-
-			      while (!operatorStack.isEmpty()) 
-			      {
-			          result.append(operatorStack.pop());
-			      }
-			        
-			      System.out.println("___________________");
-			      System.out.println("result 2 = " + result.toString());
-		     	}
+			StringBuilder result = new StringBuilder(input.length());
+	   	    @SuppressWarnings("resource")
+		    Scanner eqScanner = new Scanner(input); // (x*y)+p/k // (P*Q) +(R/(S*(T^U)))
 		     
+			while (eqScanner.hasNextLine())
+			{
+			 	 String equation = eqScanner.nextLine().trim();
+			    	 
+			   	 for (char c : equation.toCharArray()) 
+			     {
+			   		 // Append to the string builder if not an operator
+			         if (!isOperator(c)) 
+			         {
+			             result.append(c);
+			         } 
+			         
+			         else if (c == '(') 
+			         {
+			           	operatorStack.push(c);
+			         }
+			         
+			         // When a ')' is found pop it from the stack and scan until a '(' is found
+			         else if (c == ')') 
+			         {
+
+			             while (!operatorStack.isEmpty() && (char)operatorStack.peek() != '(') 
+			             {
+			                 result.append(operatorStack.pop());
+			             }
+			             
+			             if(!operatorStack.isEmpty())
+			             {
+			               	operatorStack.pop();
+			             }
+				                	
+			          }
+				            
+			          // Process the other operators
+			          else if (isOperator(c)) 
+			          {
+			               if (!operatorStack.isEmpty() && precedence(c) <= precedence((char)operatorStack.peek())) 
+			               {
+			                   result.append(operatorStack.pop());
+				           }
+				               operatorStack.push(c);
+				           }
+				      }
+
+				      while (!operatorStack.isEmpty()) 
+				      {
+				          result.append(operatorStack.pop());
+				      }
+				        
+				      System.out.println("___________________");
+				      System.out.println("postfix = " + result.toString());
+			     	}
+			
+				eqScanner.close();
+			}
 		}
-	    	  		    
+			    	  		    
 }
