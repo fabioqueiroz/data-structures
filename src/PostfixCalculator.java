@@ -28,8 +28,8 @@ public class PostfixCalculator
     }
     
 	 
-	 private int precedence(char c)
-	 {
+	private int precedence(char c)
+	{
         switch (c)
         {
             case '+':
@@ -47,7 +47,6 @@ public class PostfixCalculator
     }	 
 	 
 	
-	 // NEW MODEL
 	private void postfixConverter(String input) 
 	{
 		// Ensure there are no spaces in the equation
